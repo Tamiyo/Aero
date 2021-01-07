@@ -1,6 +1,6 @@
 # Aero
 
-Aero is a statically typed langauge that I am working on that compiles to LLVM-IR.
+Aero is a statically typed langauge that I am working on :).
 
 ## Dependencies
 Download these dependencies and put them under the `external/` folder.
