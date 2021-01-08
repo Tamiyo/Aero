@@ -1,4 +1,4 @@
-#include "syntax/parser/tree/expr.hpp"
+#include "syntax/parser/tree/expr.h"
 
 #include <spdlog/spdlog.h>
 
@@ -9,7 +9,7 @@
 namespace {
 using namespace aero::syntax;
 using namespace aero::syntax::parser;
-using namespace aero::syntax::parser::tree::Expr;
+using namespace aero::syntax::parser::tree::expr;
 
 std::optional<CompletedMarker> Lhs(Parser &p);
 
@@ -88,21 +88,22 @@ std::pair<uint8_t, uint8_t> Precedence(Op &op) {
 
 std::optional<CompletedMarker> ExprInner(Parser &p,
                                          uint8_t minimum_precedence) {
-  if (auto l = Lhs(p); l) {
+  if (auto lhs = Lhs(p); lhs) {
     for (;;) {
-      if (auto peeked = Peek(p); peeked) {
-        if (auto op = OpFromSyntaxKind(*peeked); op) {
-          std::pair<uint8_t, uint8_t> binding_precedence = Precedence(*op);
+      if (auto peeked = Peek(p)) {
+        if (auto op = OpFromSyntaxKind(*peeked)) {
+          std::pair<uint8_t, uint8_t> precedence = Precedence(*op);
 
-          if (binding_precedence.first < minimum_precedence) {
+          if (precedence.first < minimum_precedence) {
             return std::nullopt;
           }
 
           Bump(p);
 
-          Marker m = l->Precede(p);
-          ExprInner(p, binding_precedence.second);
-          *l = m.Complete(p, SyntaxKind::BinaryExpr);
+          Marker m = lhs->Precede(p);
+          ExprInner(p, precedence.second);
+
+          lhs.emplace(m.Complete(p, SyntaxKind::BinaryExpr));
         } else {
           return std::nullopt;
         }
@@ -110,7 +111,7 @@ std::optional<CompletedMarker> ExprInner(Parser &p,
         return std::nullopt;
       }
     }
-    return {l};
+    return {lhs};
   }
   return std::nullopt;
 }
@@ -133,11 +134,11 @@ CompletedMarker PrefixExpr(Parser &p) {
   Marker m = Start(p);
 
   if (auto peeked = Peek(p); peeked) {
-    if (auto op = OpFromSyntaxKind(*peeked); op) {
-      std::pair<uint8_t, uint8_t> binding_precedence = Precedence(*op);
+    if (auto op = OpFromSyntaxKind(*peeked)) {
+      std::pair<uint8_t, uint8_t> precedence = Precedence(*op);
       Bump(p);
 
-      ExprInner(p, binding_precedence.second);
+      ExprInner(p, precedence.second);
       return m.Complete(p, SyntaxKind::UnaryExpr);
     } else {
       spdlog::error("Couldn't convert op from {}",
@@ -164,7 +165,7 @@ CompletedMarker ParenExpr(Parser &p) {
 }
 
 std::optional<CompletedMarker> Lhs(Parser &p) {
-  if (auto peeked = Peek(p); peeked) {
+  if (auto peeked = Peek(p)) {
     switch (*peeked) {
       case SyntaxKind::Integer:
       case SyntaxKind::Float:
@@ -188,7 +189,6 @@ std::optional<CompletedMarker> Lhs(Parser &p) {
 }
 }  // namespace
 
-namespace aero::syntax::parser::tree::Expr {
+namespace aero::syntax::parser::tree::expr {
 std::optional<CompletedMarker> Expr(Parser &p) { return ExprInner(p, 0); }
-
-}  // namespace aero::syntax::parser::tree::Expr
+}  // namespace aero::syntax::parser::tree::expr

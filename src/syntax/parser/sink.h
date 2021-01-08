@@ -4,10 +4,10 @@
 #include <deque>
 #include <vector>
 
-#include "syntax/ast/builder.hpp"
-#include "syntax/ast/element.hpp"
-#include "syntax/lexer/token.hpp"
-#include "syntax/parser/event.hpp"
+#include "syntax/ast/builder.h"
+#include "syntax/ast/element.h"
+#include "syntax/lexer/token.h"
+#include "syntax/parser/event.h"
 
 namespace aero::syntax::parser {
 class Sink {

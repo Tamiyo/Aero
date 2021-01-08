@@ -4,11 +4,11 @@
 #include <optional>
 #include <utility>
 
-#include "syntax/parser/marker.hpp"
-#include "syntax/parser/parser.hpp"
-#include "syntax/syntax_kind.hpp"
+#include "syntax/parser/marker.h"
+#include "syntax/parser/parser.h"
+#include "syntax/syntax_kind.h"
 
-namespace aero::syntax::parser::tree::Expr {
+namespace aero::syntax::parser::tree::expr {
 enum class Op {
   Pipe = 1,
   Or,
@@ -31,6 +31,6 @@ enum class Op {
 
 std::optional<CompletedMarker> Expr(Parser &);
 
-}  // namespace aero::syntax::parser::tree::Expr
+}  // namespace aero::syntax::parser::tree::expr
 
 #endif

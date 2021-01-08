@@ -4,8 +4,8 @@
 #include <optional>
 #include <vector>
 
-#include "syntax/lexer/token.hpp"
-#include "syntax/syntax_kind.hpp"
+#include "syntax/lexer/token.h"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::parser {
 class Source {

@@ -5,10 +5,10 @@
 #include <optional>
 #include <vector>
 
-#include "syntax/lexer/token.hpp"
-#include "syntax/parser/event.hpp"
-#include "syntax/parser/source.hpp"
-#include "syntax/syntax_kind.hpp"
+#include "syntax/lexer/token.h"
+#include "syntax/parser/event.h"
+#include "syntax/parser/source.h"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::parser {
 class Marker;

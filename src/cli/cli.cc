@@ -1,4 +1,4 @@
-#include "cli/cli.hpp"
+#include "cli/cli.h"
 
 #include <fmt/core.h>
 #include <spdlog/spdlog.h>
@@ -7,14 +7,15 @@
 #include <iostream>
 #include <vector>
 
-#include "syntax/ast/element.hpp"
-#include "syntax/ast/format.hpp"
-#include "syntax/lexer/lexer.hpp"
-#include "syntax/parser/parser.hpp"
-#include "syntax/parser/sink.hpp"
+#include "syntax/ast/element.h"
+#include "syntax/ast/format.h"
+#include "syntax/lexer/lexer.h"
+#include "syntax/parser/parser.h"
+#include "syntax/parser/sink.h"
 
 namespace aero::cli {
 void Cli() {
+
   for (;;) {
     // Read in user-input
     std::string input;
@@ -33,8 +34,8 @@ void Cli() {
     std::vector<aero::syntax::lexer::Token> tokens = lexer.Tokenize();
 
     fmt::print("\n::Lexer Results::\n");
-    for (auto Token : tokens) {
-      fmt::print("{}\n", Token.Pretty());
+    for (auto token : tokens) {
+      fmt::print("{}\n", token.Pretty());
     }
 
     // Parse user input

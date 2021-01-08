@@ -1,4 +1,4 @@
-#include "syntax/lexer/token.hpp"
+#include "syntax/lexer/token.h"
 
 #include <fmt/core.h>
 
@@ -6,6 +6,10 @@
 
 namespace aero::syntax::lexer {
 Token::Token(SyntaxKind k, std::string t) : kind(k), text(t) {}
+
+bool Token::operator==(const Token& other) const {
+  return (this->kind == other.kind) && (this->text == other.text);
+}
 
 SyntaxKind Token::Kind() { return this->kind; }
 std::string Token::Text() { return this->text; }

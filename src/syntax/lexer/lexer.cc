@@ -1,4 +1,4 @@
-#include "syntax/lexer/lexer.hpp"
+#include "syntax/lexer/lexer.h"
 
 namespace aero::syntax::lexer {
 Lexer::Lexer(std::string s) : input(s) {}
@@ -22,6 +22,18 @@ std::optional<char> Lexer::Nth(std::string::iterator *it, int n) {
   } else {
     return std::nullopt;
   }
+}
+
+Token Lexer::ConsumeComment(std::string::iterator *it) {
+  std::string result = "";
+  std::string::iterator it_runner = *it;
+
+  result.push_back(Bump(&it_runner));  // Consume #
+  while (it_runner != input.end() && *it_runner != '\n') {
+    result.push_back(Bump(&it_runner));
+  }
+
+  return MakeToken(it, SyntaxKind::Comment, result);
 }
 
 Token Lexer::ConsumeString(std::string::iterator *it) {
@@ -139,6 +151,8 @@ Token Lexer::ConsumeToken(std::string::iterator *it) {
       return MakeToken(it, SyntaxKind::Colon, std::string(":"));
     case '_':
       return MakeToken(it, SyntaxKind::Underscore, std::string("_"));
+    case ',':
+      return MakeToken(it, SyntaxKind::Comma, std::string(","));
     case ' ':
       return MakeToken(it, SyntaxKind::Whitespace, std::string(" "));
     case '&':
@@ -194,9 +208,9 @@ Token Lexer::ConsumeToken(std::string::iterator *it) {
         return MakeToken(it, SyntaxKind::LessThanEqual, std::string("<="));
       } else if (Nth(it, 1).value_or(' ') == '<') {
         if (Nth(it, 2).value_or(' ') == '=') {
-          return MakeToken(it, SyntaxKind::ShiftRightEqual, std::string("<<="));
+          return MakeToken(it, SyntaxKind::ShiftLeftEqual, std::string("<<="));
         } else {
-          return MakeToken(it, SyntaxKind::ShiftRight, std::string("<<"));
+          return MakeToken(it, SyntaxKind::ShiftLeft, std::string("<<"));
         }
       } else {
         return MakeToken(it, SyntaxKind::LessThan, std::string("<"));
@@ -206,9 +220,9 @@ Token Lexer::ConsumeToken(std::string::iterator *it) {
         return MakeToken(it, SyntaxKind::GreaterThanEqual, std::string(">="));
       } else if (Nth(it, 1).value_or(' ') == '>') {
         if (Nth(it, 2).value_or(' ') == '=') {
-          return MakeToken(it, SyntaxKind::ShiftLeftEqual, std::string(">>="));
+          return MakeToken(it, SyntaxKind::ShiftRightEqual, std::string(">>="));
         } else {
-          return MakeToken(it, SyntaxKind::ShiftLeft, std::string(">>"));
+          return MakeToken(it, SyntaxKind::ShiftRight, std::string(">>"));
         }
       } else {
         return MakeToken(it, SyntaxKind::GreaterThan, std::string(">"));
@@ -235,6 +249,8 @@ Token Lexer::ConsumeToken(std::string::iterator *it) {
       return MakeToken(it, SyntaxKind::Newline, std::string("\n"));
     case '\r':
       return MakeToken(it, SyntaxKind::Newline, std::string("\r\n"));
+    case '#':
+      return ConsumeComment(it);
     case '"':
       return ConsumeString(it);
     case '0':

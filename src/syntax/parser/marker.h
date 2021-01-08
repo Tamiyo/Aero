@@ -5,11 +5,10 @@
 #include <string>
 #include <variant>
 
-#include "syntax/syntax_kind.hpp"
+#include "syntax/parser/parser.h"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::parser {
-class Parser;
-
 class Marker;
 class CompletedMarker;
 

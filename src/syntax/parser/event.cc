@@ -1,4 +1,4 @@
-#include "syntax/parser/event.hpp"
+#include "syntax/parser/event.h"
 
 #include <fmt/core.h>
 
@@ -24,7 +24,7 @@ void EventValue::SetForwardParent(std::optional<size_t> fp) {
 
 std::string EventValue::Pretty() {
   auto magic_kind = std::string(magic_enum::enum_name(this->kind));
-  if (auto fp = forward_parent; fp)
+  if (auto fp = forward_parent)
     return fmt::format("[{}, {}]", magic_kind, std::to_string(*fp));
   else
     return fmt::format("[{}, NULL]", magic_kind);

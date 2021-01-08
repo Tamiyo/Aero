@@ -1,4 +1,4 @@
-#include "syntax/ast/format.hpp"
+#include "syntax/ast/format.h"
 
 #include <fmt/core.h>
 
@@ -11,8 +11,8 @@ std::string PrettyGreenNode(const GreenNode &n, size_t i) {
 
   for (auto child : n.children) {
     GreenElement *ptr = child.get();
-    if (ptr->index() == 0) {
-      out.append(PrettyGreenNode(std::get<0>(*ptr), i + 1));
+    if (auto child_node = std::get_if<GreenNode>(ptr)) {
+      out.append(PrettyGreenNode(*child_node, i + 1));
     } else {
       out.append(fmt::format("{: >{}}{}\n", "", 2 * (i + 1),
                              PrettyGreenToken(std::get<1>(*ptr))));

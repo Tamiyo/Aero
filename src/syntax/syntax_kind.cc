@@ -1,4 +1,6 @@
-#include "syntax_kind.hpp"
+#include "syntax_kind.h"
+
+#include <magic_enum.hpp>
 
 namespace aero::syntax {
 bool is_trivia(SyntaxKind kind) {

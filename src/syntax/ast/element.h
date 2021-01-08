@@ -6,7 +6,7 @@
 #include <memory>
 #include <variant>
 
-#include "syntax/syntax_kind.hpp"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::ast {
 struct GreenToken {

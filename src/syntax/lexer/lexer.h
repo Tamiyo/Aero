@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "syntax/lexer/token.hpp"
-#include "syntax/syntax_kind.hpp"
+#include "syntax/lexer/token.h"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::lexer {
 class Lexer {
@@ -23,6 +23,7 @@ class Lexer {
   char Bump(std::string::iterator *);
   std::optional<char> Nth(std::string::iterator *, int);
 
+  Token ConsumeComment(std::string::iterator *);
   Token ConsumeToken(std::string::iterator *);
   Token ConsumeString(std::string::iterator *);
   Token ConsumeNumeric(std::string::iterator *);

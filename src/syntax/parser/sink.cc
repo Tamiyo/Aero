@@ -1,4 +1,4 @@
-#include "syntax/parser/sink.hpp"
+#include "syntax/parser/sink.h"
 
 #include <algorithm>
 

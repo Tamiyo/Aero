@@ -2,8 +2,8 @@
 cmake_minimum_required(VERSION 3.13.0)
 
 # General Compilation Flags
-set(CMAKE_CXX_COMPILER "g++")
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

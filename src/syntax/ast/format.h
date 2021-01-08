@@ -4,8 +4,8 @@
 
 #include <string>
 
-#include "syntax/ast/element.hpp"
-#include "syntax/syntax_kind.hpp"
+#include "syntax/ast/element.h"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::ast {
 std::string PrettyGreenNode(const GreenNode &, size_t);

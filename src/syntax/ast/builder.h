@@ -3,7 +3,7 @@
 
 #include <deque>
 
-#include "syntax/ast/element.hpp"
+#include "syntax/ast/element.h"
 
 namespace aero::syntax::ast {
 class GreenNodeBuilder {

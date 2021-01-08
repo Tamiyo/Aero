@@ -3,7 +3,7 @@
 
 #include <optional>
 
-#include "syntax/syntax_kind.hpp"
+#include "syntax/syntax_kind.h"
 
 namespace aero::syntax::parser {
 enum class EventType {

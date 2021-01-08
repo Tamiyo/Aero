@@ -1,4 +1,4 @@
-#include "syntax/ast/builder.hpp"
+#include "syntax/ast/builder.h"
 
 #include <spdlog/spdlog.h>
 
@@ -43,11 +43,11 @@ GreenNode GreenNodeBuilder::Finish() {
     exit(1);
   }
 
-  GreenElement el = children.back();
+  GreenElement element = children.back();
   children.pop_back();
 
-  if (el.index() == 0) {
-    return std::get<0>(el);
+  if (auto el = std::get_if<GreenNode>(&element)) {
+    return *el;
   } else {
     spdlog::error("Expected GreenNode to be last element, not GreenToken");
     exit(1);

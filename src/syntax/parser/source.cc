@@ -1,4 +1,4 @@
-#include "syntax/parser/source.hpp"
+#include "syntax/parser/source.h"
 
 namespace aero::syntax::parser {
 Source::Source(const std::vector<lexer::Token> &t) {

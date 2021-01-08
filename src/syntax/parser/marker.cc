@@ -1,11 +1,11 @@
-#include "syntax/parser/marker.hpp"
+#include "syntax/parser/marker.h"
 
 #include <spdlog/spdlog.h>
 
 #include <cassert>
 
-#include "syntax/parser/event.hpp"
-#include "syntax/parser/parser.hpp"
+#include "syntax/parser/event.h"
+#include "syntax/parser/parser.h"
 
 namespace aero::syntax::parser {
 // Completed Marker
