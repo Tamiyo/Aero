@@ -2,32 +2,28 @@
 
 WIP Programming Language in C++
 
-## Dependencies
-Download these dependencies and put them under the `external/` folder.
-- https://github.com/fmtlib/fmt
-- https://github.com/gabime/spdlog
-- https://github.com/google/googletest
-- https://github.com/Neargye/magic_enum
+## Built with Bazel
+Build with [Bazel](https://github.com/bazelbuild/bazel). Find out [more](https://www.bazel.build/).
 
-## Build
-Enter the following commands to build the project
+## Pipeline
+### Build All
 ```
-mkdir build
-cd build
-cmake ..
-make all
+bazel build //...
 ```
 
-## Run the Project
-To run the project run the following executable (from the `build` directory)
+### Build Source
 ```
-src/Aero_run
+bazel build //src:Aero
 ```
 
-## Testing the Project
-To test the project run the following executable (from the `build` directory)
+### Build & Run Source
 ```
-test/Aero_test
+bazel run //src:Aero
+```
+
+### Build & Run Tests
+```
+bazel test //...
 ```
 
 ## Stylistic Choices

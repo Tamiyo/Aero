@@ -1,8 +1,6 @@
 #ifndef AERO_LEXER_TOKEN_H
 #define AERO_LEXER_TOKEN_H
 
-#include <fmt/format.h>
-
 #include <string>
 
 #include "syntax/syntax_kind.h"

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "lexer.h"
 #include "syntax/syntax_kind.h"
+#include "test/syntax/lexer/lexer.h"
 
 namespace {
 using namespace aero::syntax;
@@ -116,4 +116,4 @@ TEST(AeroLexer, LexFalseKwShouldPass) {
 
   ASSERT_EQ(tokens, expected);
 }
-}
+}  // namespace

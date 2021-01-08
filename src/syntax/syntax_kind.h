@@ -1,8 +1,6 @@
 #ifndef AERO_SYNTAX_SYNTAX_KIND_H
 #define AERO_SYNTAX_SYNTAX_KIND_H
 
-#include <fmt/format.h>
-
 namespace aero::syntax {
 enum class SyntaxKind {
   // Literals
@@ -98,6 +96,5 @@ enum class SyntaxKind {
 
 bool is_trivia(SyntaxKind);
 }  // namespace aero::syntax
-
 
 #endif

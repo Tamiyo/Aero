@@ -3,7 +3,7 @@
 
 # Build Directory
 build/
-external/
+bazel*
 
 # VSCode Directory
 .vscode/

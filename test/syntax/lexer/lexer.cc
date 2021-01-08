@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "test/syntax/lexer/lexer.h"
 
 std::vector<aero::syntax::lexer::Token> LexInput(std::string input) {
   aero::syntax::lexer::Lexer lexer(input);

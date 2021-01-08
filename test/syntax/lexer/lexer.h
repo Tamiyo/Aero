@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "syntax/lexer/lexer.h"
-#include "syntax/lexer/token.h"
+#include "src/syntax/lexer/lexer.h"
+#include "src/syntax/lexer/token.h"
 
 std::vector<aero::syntax::lexer::Token> LexInput(std::string);
 
