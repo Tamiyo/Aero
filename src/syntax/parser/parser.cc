@@ -31,7 +31,6 @@ void Bump(Parser &p) {
 void Parse(Parser &p) {
   Marker m = Start(p);
 
-  // AST Here!
   tree::stmt::Stmt(p);
 
   m.Complete(p, SyntaxKind::Root);

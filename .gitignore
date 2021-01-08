@@ -5,6 +5,9 @@
 build/
 external/
 
+# VSCode Directory
+.vscode/
+
 # Compiled Object files
 *.slo
 *.lo
