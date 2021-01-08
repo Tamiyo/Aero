@@ -1,6 +1,6 @@
 
-#ifndef AERO_AST_ELEMENT_HPP
-#define AERO_AST_ELEMENT_HPP
+#ifndef AERO_AST_ELEMENT_H
+#define AERO_AST_ELEMENT_H
 
 #include <deque>
 #include <memory>
@@ -21,7 +21,6 @@ struct GreenNode {
 };
 
 using GreenElement = std::variant<GreenNode, GreenToken>;
-
 }  // namespace aero::syntax::ast
 
 #endif

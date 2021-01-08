@@ -1,7 +1,7 @@
 #include "syntax/parser/parser.h"
 
 #include "syntax/parser/marker.h"
-#include "syntax/parser/tree/expr.h"
+#include "syntax/parser/tree/stmt.h"
 
 namespace aero::syntax::parser {
 Marker Start(Parser &p) {
@@ -32,7 +32,7 @@ void Parse(Parser &p) {
   Marker m = Start(p);
 
   // AST Here!
-  tree::expr::Expr(p);
+  tree::stmt::Stmt(p);
 
   m.Complete(p, SyntaxKind::Root);
 }

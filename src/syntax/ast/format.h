@@ -1,6 +1,6 @@
 
-#ifndef AERO_AST_FORMAT_HPP
-#define AERO_AST_FORMAT_HPP
+#ifndef AERO_AST_FORMAT_H
+#define AERO_AST_FORMAT_H
 
 #include <string>
 

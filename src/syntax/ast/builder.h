@@ -1,5 +1,5 @@
-#ifndef AERO_AST_BUILDER_HPP
-#define AERO_AST_BUILDER_HPP
+#ifndef AERO_AST_BUILDER_H
+#define AERO_AST_BUILDER_H
 
 #include <deque>
 

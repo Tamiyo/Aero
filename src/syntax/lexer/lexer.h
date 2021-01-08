@@ -1,5 +1,5 @@
-#ifndef AERO_LEXER_LEXER_HPP
-#define AERO_LEXER_LEXER_HPP
+#ifndef AERO_LEXER_LEXER_H
+#define AERO_LEXER_LEXER_H
 
 #include <iterator>
 #include <optional>

@@ -1,5 +1,5 @@
-#ifndef AERO_CLI_CLI_HPP
-#define AERO_CLI_CLI_HPP
+#ifndef AERO_CLI_CLI_H
+#define AERO_CLI_CLI_H
 
 namespace aero::cli {
 void Cli();

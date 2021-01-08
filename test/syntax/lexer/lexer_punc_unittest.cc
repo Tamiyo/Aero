@@ -74,4 +74,4 @@ TEST(AeroLexer, LexUnderscoreShouldPass) {
 
   ASSERT_EQ(tokens, expected);
 }
-}
+}  // namespace

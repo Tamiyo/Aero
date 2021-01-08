@@ -1,5 +1,5 @@
-#ifndef AERO_PARSER_SINK_HPP
-#define AERO_PARSER_SINK_HPP
+#ifndef AERO_PARSER_SINK_H
+#define AERO_PARSER_SINK_H
 
 #include <deque>
 #include <vector>

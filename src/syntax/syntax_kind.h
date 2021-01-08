@@ -1,5 +1,5 @@
-#ifndef AERO_SYNTAX_SYNTAX_KIND_HPP
-#define AERO_SYNTAX_SYNTAX_KIND_HPP
+#ifndef AERO_SYNTAX_SYNTAX_KIND_H
+#define AERO_SYNTAX_SYNTAX_KIND_H
 
 #include <fmt/format.h>
 

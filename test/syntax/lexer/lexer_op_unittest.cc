@@ -214,4 +214,4 @@ TEST(AeroLexer, LexCaretEqualShouldPass) {
 
   ASSERT_EQ(tokens, expected);
 }
-}
+}  // namespace

@@ -46,4 +46,4 @@ TEST(AeroLexer, LexBoolTyShouldPass) {
 
   ASSERT_EQ(tokens, expected);
 }
-}
+}  // namespace

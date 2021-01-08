@@ -1,5 +1,5 @@
-#ifndef AERO_PARSER_MARKER_HPP
-#define AERO_PARSER_MARKER_HPP
+#ifndef AERO_PARSER_MARKER_H
+#define AERO_PARSER_MARKER_H
 
 #include <optional>
 #include <string>

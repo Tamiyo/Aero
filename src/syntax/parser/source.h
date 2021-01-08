@@ -1,5 +1,5 @@
-#ifndef AERO_PARSER_SOURCE_HPP
-#define AERO_PARSER_SOURCE_HPP
+#ifndef AERO_PARSER_SOURCE_H
+#define AERO_PARSER_SOURCE_H
 
 #include <optional>
 #include <vector>

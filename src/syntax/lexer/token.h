@@ -1,5 +1,5 @@
-#ifndef AERO_LEXER_TOKEN_HPP
-#define AERO_LEXER_TOKEN_HPP
+#ifndef AERO_LEXER_TOKEN_H
+#define AERO_LEXER_TOKEN_H
 
 #include <fmt/format.h>
 

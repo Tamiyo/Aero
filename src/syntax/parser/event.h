@@ -1,5 +1,5 @@
-#ifndef AERO_PARSER_EVENT_HPP
-#define AERO_PARSER_EVENT_HPP
+#ifndef AERO_PARSER_EVENT_H
+#define AERO_PARSER_EVENT_H
 
 #include <optional>
 

@@ -1,5 +1,5 @@
-#ifndef AERO_PARSER_PARSER_HPP
-#define AERO_PARSER_PARSER_HPP
+#ifndef AERO_PARSER_PARSER_H
+#define AERO_PARSER_PARSER_H
 
 #include <deque>
 #include <optional>

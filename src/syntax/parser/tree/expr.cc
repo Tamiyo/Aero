@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <magic_enum.hpp>
 
+#include "syntax/syntax_kind.h"
+
 namespace {
 using namespace aero::syntax;
 using namespace aero::syntax::parser;
