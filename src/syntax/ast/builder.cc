@@ -38,6 +38,7 @@ void GreenNodeBuilder::FinishNode() {
 
 GreenNode GreenNodeBuilder::Finish() {
   if (children.size() != 1) {
+    spdlog::error("Parents Size: {}\n", parents.size());
     spdlog::error("Expected children to only have one element : HAD {}",
                   children.size());
     exit(1);

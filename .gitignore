@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# Other directory
+docs/
+
 # Build Directory
 build/
 bazel*

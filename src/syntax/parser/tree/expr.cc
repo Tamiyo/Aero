@@ -15,44 +15,45 @@ using namespace aero::syntax::parser::tree::expr;
 
 std::optional<CompletedMarker> Lhs(Parser &p);
 
-std::optional<Op> OpFromSyntaxKind(const SyntaxKind &kind) {
-  switch (kind) {
-    case SyntaxKind::Pipe:
-      return {Op::Pipe};
-    case SyntaxKind::OrKw:
-      return {Op::Or};
-    case SyntaxKind::Amp:
-      return {Op::Amp};
-    case SyntaxKind::AndKw:
-      return {Op::And};
-    case SyntaxKind::EqualEqual:
-      return {Op::EqualEqual};
-    case SyntaxKind::BangEqual:
-      return {Op::BangEqual};
-    case SyntaxKind::LessThan:
-      return {Op::LessThan};
-    case SyntaxKind::LessThanEqual:
-      return {Op::LessThanEqual};
-    case SyntaxKind::GreaterThan:
-      return {Op::GreaterThan};
-    case SyntaxKind::GreaterThanEqual:
-      return {Op::GreaterThanEqual};
-    case SyntaxKind::Plus:
-      return {Op::Add};
-    case SyntaxKind::Minus:
-      return {Op::Sub};
-    case SyntaxKind::Star:
-      return {Op::Mul};
-    case SyntaxKind::Slash:
-      return {Op::Div};
-    case SyntaxKind::Mod:
-      return {Op::Mod};
-    case SyntaxKind::Caret:
-      return {Op::Pow};
-    case SyntaxKind::Bang:
-      return {Op::Bang};
-    default:
-      return std::nullopt;
+std::optional<Op> OpFromSyntaxKind(Parser &p) {
+  if (p.At(SyntaxKind::Pipe)) {
+    return {Op::Pipe};
+  } else if (p.At(SyntaxKind::OrKw)) {
+    return {Op::Or};
+  } else if (p.At(SyntaxKind::OrKw)) {
+    return {Op::Or};
+  } else if (p.At(SyntaxKind::Amp)) {
+    return {Op::Amp};
+  } else if (p.At(SyntaxKind::AndKw)) {
+    return {Op::And};
+  } else if (p.At(SyntaxKind::EqualEqual)) {
+    return {Op::EqualEqual};
+  } else if (p.At(SyntaxKind::BangEqual)) {
+    return {Op::BangEqual};
+  } else if (p.At(SyntaxKind::LessThan)) {
+    return {Op::LessThan};
+  } else if (p.At(SyntaxKind::LessThanEqual)) {
+    return {Op::LessThanEqual};
+  } else if (p.At(SyntaxKind::GreaterThan)) {
+    return {Op::GreaterThan};
+  } else if (p.At(SyntaxKind::GreaterThanEqual)) {
+    return {Op::GreaterThanEqual};
+  } else if (p.At(SyntaxKind::Plus)) {
+    return {Op::Add};
+  } else if (p.At(SyntaxKind::Minus)) {
+    return {Op::Sub};
+  } else if (p.At(SyntaxKind::Star)) {
+    return {Op::Mul};
+  } else if (p.At(SyntaxKind::Slash)) {
+    return {Op::Div};
+  } else if (p.At(SyntaxKind::Mod)) {
+    return {Op::Mod};
+  } else if (p.At(SyntaxKind::Caret)) {
+    return {Op::Pow};
+  } else if (p.At(SyntaxKind::Bang)) {
+    return {Op::Bang};
+  } else {
+    return {};
   }
 }
 
@@ -90,27 +91,23 @@ std::pair<uint8_t, uint8_t> Precedence(Op &op) {
 
 std::optional<CompletedMarker> ExprInner(Parser &p,
                                          uint8_t minimum_precedence) {
-  if (auto lhs = Lhs(p); lhs) {
+  if (auto lhs = Lhs(p)) {
     for (;;) {
-      if (auto peeked = Peek(p)) {
-        if (auto op = OpFromSyntaxKind(*peeked)) {
-          std::pair<uint8_t, uint8_t> precedence = Precedence(*op);
+      if (auto op = OpFromSyntaxKind(p)) {
+        std::pair<uint8_t, uint8_t> precedence = Precedence(*op);
 
-          if (precedence.first < minimum_precedence) {
-            return std::nullopt;
-          }
-
-          Bump(p);
-
-          Marker m = lhs->Precede(p);
-          ExprInner(p, precedence.second);
-
-          lhs.emplace(m.Complete(p, SyntaxKind::BinaryExpr));
-        } else {
+        if (precedence.first < minimum_precedence) {
           return std::nullopt;
         }
+
+        p.Bump();
+
+        Marker m = lhs->Precede(p);
+        ExprInner(p, precedence.second);
+
+        lhs.emplace(m.Complete(p, SyntaxKind::BinaryExpr));
       } else {
-        return std::nullopt;
+        break;
       }
     }
     return {lhs};
@@ -119,74 +116,49 @@ std::optional<CompletedMarker> ExprInner(Parser &p,
 }
 
 CompletedMarker Literal(Parser &p) {
-  Marker m = Start(p);
-  Bump(p);
+  Marker m = p.Start();
+  p.Bump();
   return m.Complete(p, SyntaxKind::Literal);
 }
 
 CompletedMarker VariableRef(Parser &p) {
-  assert(PeekAt(p, SyntaxKind::Identifier));
+  assert(p.At(SyntaxKind::Identifier));
 
-  Marker m = Start(p);
-  Bump(p);
+  Marker m = p.Start();
+  p.Bump();
   return m.Complete(p, SyntaxKind::VariableRef);
 }
 
 CompletedMarker PrefixExpr(Parser &p) {
-  Marker m = Start(p);
-
-  if (auto peeked = Peek(p); peeked) {
-    if (auto op = OpFromSyntaxKind(*peeked)) {
-      std::pair<uint8_t, uint8_t> precedence = Precedence(*op);
-      Bump(p);
-
-      ExprInner(p, precedence.second);
-      return m.Complete(p, SyntaxKind::UnaryExpr);
-    } else {
-      spdlog::error("Couldn't convert op from {}",
-                    magic_enum::enum_name(*peeked));
-      exit(1);
-    }
-  } else {
-    spdlog::error("Parser at end of input!");
-    exit(1);
-  }
+  Marker m = p.Start();
+  return m.Complete(p, SyntaxKind::UnaryExpr);
 }
 
 CompletedMarker ParenExpr(Parser &p) {
-  assert(PeekAt(p, SyntaxKind::LeftParen));
-  Marker m = Start(p);
+  assert(p.At(SyntaxKind::LeftParen));
+  Marker m = p.Start();
 
-  Bump(p);
+  p.Bump();
   ExprInner(p, 0);
 
-  assert(PeekAt(p, SyntaxKind::RightParen));
-  Bump(p);
-
+  p.Expect(SyntaxKind::RightParen);
   return m.Complete(p, SyntaxKind::ParenExpr);
 }
 
 std::optional<CompletedMarker> Lhs(Parser &p) {
-  if (auto peeked = Peek(p)) {
-    switch (*peeked) {
-      case SyntaxKind::Integer:
-      case SyntaxKind::Float:
-      case SyntaxKind::String:
-      case SyntaxKind::TrueKw:
-      case SyntaxKind::FalseKw:
-        return {Literal(p)};
-      case SyntaxKind::Identifier:
-        return {VariableRef(p)};
-      case SyntaxKind::Minus:
-      case SyntaxKind::Bang:
-        return {PrefixExpr(p)};
-      case SyntaxKind::LeftParen:
-        return {ParenExpr(p)};
-      default:
-        return std::nullopt;  //  impossible
-    }
+  if (p.At(SyntaxKind::Integer) || p.At(SyntaxKind::Float) ||
+      p.At(SyntaxKind::String) || p.At(SyntaxKind::TrueKw) ||
+      p.At(SyntaxKind::FalseKw)) {
+    return {Literal(p)};
+  } else if (p.At(SyntaxKind::Identifier)) {
+    return {VariableRef(p)};
+  } else if (p.At(SyntaxKind::Minus) || p.At(SyntaxKind::Bang)) {
+    return {PrefixExpr(p)};
+  } else if (p.At(SyntaxKind::LeftParen)) {
+    return {ParenExpr(p)};
   } else {
-    return std::nullopt;
+    p.Error();
+    return {};
   }
 }
 }  // namespace

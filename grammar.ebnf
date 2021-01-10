@@ -1,0 +1,110 @@
+# Declaration Statements
+declaration ::= structDecl
+                | structImplDecl
+                | componentDecl
+                | funDecl
+                | statement
+
+structDecl ::= "struct" IDENTIFIER '{' (assignStmt ',')* '}'
+structImplDecl ::= "impl" IDENTIFIER '{' funDecl* '}'
+
+componentDecl ::= "component" IDENTIFIER '{' (funDecl|assignStmt)* "}"
+
+funDecl ::= funBlockDecl | funArrowDecl
+funBlockDecl ::= IDENTIFIER typed_identifier_list? "=>" dataType? blockStmt
+
+statement ::= terminated_statement | unterminated_statement
+
+terminated_statement ::= exprStmt ";"
+            | returnStmt ";"
+            | assignStmt ";"
+
+unterminated_statement ::= ifStmt
+            | whileStmt
+            | forStmt
+            | blockStmt
+
+
+# Statement Statements
+exprStmt ::= expression
+returnStmt ::= "return" expression
+assignStmt ::= IDENTIFIER ":" dataType "=" expression
+                | IDENTIFIER ":" dataType
+
+ifStmt ::= "if" expression blockStmt
+            (("elif"  expression)*)? ("else" blockStmt)?
+whileStmt ::= "while" expression blockStmt
+forStmt ::= "for" IDENTIFIER "in" (multi_select_list) blockStmt
+blockStmt ::= "{" statement* "}"
+
+
+# Expression Statements
+expression ::= logic_or
+logic_or ::= logic_and (("||" | "|") logic_and)*
+logic_and ::= equality (("&&" | "&") equality)*
+equality ::= comparison ( ("!=" | "==") comparison )*
+comparison ::= addition ( (">" | ">=" | "<" | "<=") addition)*
+addition ::= multiplication ( ("+" | "-") multiplication)*
+multiplication ::= power ( ("*" | "/" | "%") power)*
+power ::= unary ("^" unary)*    
+unary ::= "!" unary | index
+index ::= IDENTIFIER bracket_specifier 
+            | bracket_specifier
+            | call
+call ::= primary ( "(" identifier_list ")" | "." IDENTIFIER )*
+primary ::= literal
+            | "(" expression ")"
+            | multi_select_list # Array
+            | ranged_iterator
+
+
+
+# List, Slices, and List Comprehensions
+bracket_specifier ::= "[" (NUMBER | slice_expression) "]"
+                    | "[" "]"
+
+# https://jmespath.org/proposals/array-slices.html
+slice_expression ::=  NUMBER ":" NUMBER ":" NUMBER
+                    | NUMBER ":"
+                    | NUMBER ":" ":" NUMBER
+                    | ":"
+                    | ":" NUMBER
+                    | ":" NUMBER ":" NUMBER
+                    | ":" ":" NUMBER
+
+multi_select_list ::= "[" expression_list "]
+
+typed_identifier_list ::= IDENTIFIER ':' dtype ( "," IDENTIFIER ':' dtype)*
+identifier_list ::= named_identifier_list | unnamed_identifier_list
+named_identifier_list ::= "{" (IDENTIFIER ":" literal)+ "}"
+unnamed_identifier_list ::= IDENTIFIER ( "," IDENTIFIER )*
+
+expression_list ::= expression ( "," expression )*
+
+# Literals and Types
+literal ::= INTEGER 
+        | FLOAT 
+        | STRING 
+        | "true" 
+        | "false" 
+        | IDENTIFIER 
+        | "none"
+
+
+dataType ::=
+    | "i32"
+    | "i64"
+    | "f32"
+    | "f64"
+    | "str"
+    | "bool"
+    | IDENTIFIER
+
+# Literal Types
+INTEGER ::= "[0-9]+"
+FLOAT ::= "[0-9]*\\.[0-9]+"
+STRING ::= "\"(\\.|[^\"\\\\])*\""
+IDENTIFIER ::= "[A-Za-z][A-Za-z0-9]*"
+WHITESPACE ::= "[ \t]+"
+NEWLINE ::= "(\n\r|\n)+"
+COMMENT ::= "//.*"

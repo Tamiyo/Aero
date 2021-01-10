@@ -2,20 +2,10 @@
 #define AERO_SYNTAX_SYNTAX_KIND_H
 
 namespace aero::syntax {
+
 enum class SyntaxKind {
-  // Literals
-  Integer = 1,
-  Float,
-  String,
-
-  // Tokens
-  Whitespace,
-  Newline,
-  Identifier,
-  Comment,
-
   // Punctuation
-  LeftParen,
+  LeftParen = 1,
   RightParen,
   LeftCurly,
   RightCurly,
@@ -25,8 +15,23 @@ enum class SyntaxKind {
   Colon,
   Comma,
   Underscore,
+  EqualArrow,
+
+  // Literals
+  __LITERALS,
+  Integer,
+  Float,
+  String,
+
+  // Tokens
+  __TOKENS,
+  Whitespace,
+  Newline,
+  Identifier,
+  Comment,
 
   // Operators
+  __OPERATORS,
   Amp,
   Pipe,
   Plus,
@@ -59,6 +64,7 @@ enum class SyntaxKind {
   CaretEqual,
 
   // Keywords
+  __KEYWORDS,
   AndKw,
   OrKw,
   IfKw,
@@ -78,6 +84,7 @@ enum class SyntaxKind {
   FalseKw,
 
   // Builtin Types
+  __TYPES,
   I32Ty,
   I64Ty,
   F32Ty,
@@ -86,15 +93,23 @@ enum class SyntaxKind {
   BoolTy,
 
   // Nodes
+  __NODES,
   Root,
+  Error,
+  Placeholder,
+
   BinaryExpr,
   UnaryExpr,
   ParenExpr,
   Literal,
   VariableRef,
+
+  VariableDecl,
+  FunctionDecl,
 };
 
-bool is_trivia(SyntaxKind);
+bool IsTrivia(SyntaxKind);
+bool IsType(SyntaxKind);
 }  // namespace aero::syntax
 
 #endif

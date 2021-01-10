@@ -1,9 +1,12 @@
 #include "syntax/parser/sink.h"
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
+#include <variant>
 
 namespace aero::syntax::parser {
-Sink::Sink(std::vector<aero::syntax::lexer::Token> t, std::deque<Event> e)
+Sink::Sink(std::vector<aero::syntax::lexer::Token> t, std::vector<Event> e)
     : tokens(t), events(e) {
   this->builder = ast::GreenNodeBuilder();
   this->cursor = 0;
@@ -11,26 +14,28 @@ Sink::Sink(std::vector<aero::syntax::lexer::Token> t, std::deque<Event> e)
 
 ast::GreenNode Sink::Finish() {
   for (size_t idx = 0; idx < events.size(); idx += 1) {
-    Event event = events[idx];
-    events[idx] = Event{EventType::Placeholder, std::nullopt};
+    Event event = events.at(idx);
+    events.at(idx) = {EventPlaceholder{}};
 
-    if (auto ev = event.Value(); ev && event.Type() == EventType::StartNode) {
-      std::vector<SyntaxKind> kinds({(*ev).Kind()});
+    if (std::holds_alternative<EventStartNode>(event.type)) {
+      EventStartNode start = std::get<EventStartNode>(event.type);
+      std::vector<SyntaxKind> kinds({start.kind});
 
-      size_t idx_i = idx;
-      std::optional<size_t> forward_parent = (*ev).ForwardParent();
+      size_t idx_parent = idx;
+      std::optional<size_t> forward_parent = start.forward_parent;
 
       for (;;) {
-        if (auto fp = forward_parent; fp) {
-          idx_i += *fp;
+        if (auto fp = forward_parent) {
+          idx_parent += *fp;
 
-          Event event_i = events[idx_i];
-          events[idx_i] = Event{EventType::Placeholder, std::nullopt};
+          Event event_parent = events.at(idx_parent);
+          events.at(idx_parent) = Event{EventPlaceholder{}};
 
-          if (auto ev_v = event_i.Value();
-              ev && event_i.Type() == EventType::StartNode) {
-            kinds.push_back((*ev_v).Kind());
-            forward_parent = (*ev_v).ForwardParent();
+          if (std::holds_alternative<EventStartNode>(event_parent.type)) {
+            EventStartNode start_inner =
+                std::get<EventStartNode>(event_parent.type);
+            kinds.push_back(start_inner.kind);
+            forward_parent = start_inner.forward_parent;
           }
         } else {
           break;
@@ -41,9 +46,9 @@ ast::GreenNode Sink::Finish() {
       for (auto kind : kinds) {
         builder.StartNode(kind);
       }
-    } else if (event.Type() == EventType::AddToken) {
+    } else if (std::holds_alternative<EventAddToken>(event.type)) {
       Token();
-    } else if (event.Type() == EventType::FinishNode) {
+    } else if (std::holds_alternative<EventFinishNode>(event.type)) {
       builder.FinishNode();
     }
 
@@ -57,7 +62,7 @@ void Sink::EatTrivia() {
   while (cursor < tokens.size()) {
     lexer::Token t = tokens.at(cursor);
 
-    if (!is_trivia(t.Kind())) break;
+    if (!IsTrivia(t.Kind())) break;
 
     Token();
   }

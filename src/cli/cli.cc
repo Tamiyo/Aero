@@ -15,7 +15,6 @@
 
 namespace aero::cli {
 void Cli() {
-
   for (;;) {
     // Read in user-input
     std::string input;
@@ -41,10 +40,10 @@ void Cli() {
     // Parse user input
     aero::syntax::parser::Source source(tokens);
 
-    aero::syntax::parser::Parser parser{source, {}};
-    aero::syntax::parser::Parse(parser);
+    aero::syntax::parser::Parser parser(source);
+    parser.Parse();
 
-    aero::syntax::parser::Sink sink(tokens, parser.events);
+    aero::syntax::parser::Sink sink(tokens, parser.Events());
     aero::syntax::ast::GreenNode node = sink.Finish();
 
     fmt::print("\n::AST Results::\n");

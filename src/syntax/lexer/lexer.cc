@@ -236,6 +236,8 @@ Token Lexer::ConsumeToken(std::string::iterator *it) {
     case '=':
       if (Nth(it, 1).value_or(' ') == '=') {
         return MakeToken(it, SyntaxKind::EqualEqual, std::string("=="));
+      } else if (Nth(it, 1).value_or(' ') == '>') {
+        return MakeToken(it, SyntaxKind::EqualArrow, std::string("=>"));
       } else {
         return MakeToken(it, SyntaxKind::Equal, std::string("="));
       }

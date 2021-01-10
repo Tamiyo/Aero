@@ -5,51 +5,26 @@
 #include <magic_enum.hpp>
 
 namespace aero::syntax::parser {
-// Event Value
-EventValue::EventValue(SyntaxKind k, std::optional<size_t> fp) {
-  this->kind = k;
-  this->forward_parent = fp;
-}
-
-SyntaxKind EventValue::Kind() { return this->kind; }
-void EventValue::SetKind(SyntaxKind k) { this->kind = k; }
-
-std::optional<size_t> EventValue::ForwardParent() {
-  return this->forward_parent;
-}
-
-void EventValue::SetForwardParent(std::optional<size_t> fp) {
-  this->forward_parent = fp;
-}
-
-std::string EventValue::Pretty() {
-  auto magic_kind = std::string(magic_enum::enum_name(this->kind));
-  if (auto fp = forward_parent)
-    return fmt::format("[{}, {}]", magic_kind, std::to_string(*fp));
-  else
-    return fmt::format("[{}, NULL]", magic_kind);
-}
-
-// Event
-Event::Event(EventType t, std::optional<EventValue> v) {
-  this->type = t;
-  this->value = v;
-}
-
-EventType Event::Type() { return this->type; }
-void Event::SetType(EventType t) { this->type = t; }
-
-std::optional<EventValue> Event::Value() { return this->value; }
-void Event::SetValue(std::optional<EventValue> v) { this->value = v; }
-
-EventValue* Event::ValueUnwrappedRef() { return &*(this->value); }
+Event::Event(EventType t) : type(t) {}
 
 std::string Event::Pretty() {
-  auto magic_type = magic_enum::enum_name(this->type);
+  if (std::holds_alternative<EventStartNode>(type)) {
+    EventStartNode node = std::get<EventStartNode>(type);
+    std::string fp = (node.forward_parent.has_value())
+                         ? std::to_string(*node.forward_parent)
+                         : "N/A";
 
-  if (auto v = value; v && type == EventType::StartNode)
-    return fmt::format("[{}, {}]", magic_type, (*v).Pretty());
-  else
-    return fmt::format("[{}, NULL]", magic_type);
+    return fmt::format("StartNode {{{} : {}}}",
+                       magic_enum::enum_name(node.kind), fp);
+  } else if (std::holds_alternative<EventAddToken>(type)) {
+    return "AddToken {}";
+  } else if (std::holds_alternative<EventFinishNode>(type)) {
+    return "FinishNode {}";
+  } else if (std::holds_alternative<EventPlaceholder>(type)) {
+    return "Placeholder {}";
+  } else {
+    EventError node = std::get<EventError>(type);
+    return "Error {}";
+  }
 }
 }  // namespace aero::syntax::parser

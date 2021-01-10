@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
-#include "test/syntax/lexer/lexer.h"
 #include "src/syntax/syntax_kind.h"
+#include "test/syntax/lexer/lexer.h"
 
 namespace {
 using namespace aero::syntax;
@@ -71,6 +71,13 @@ TEST(AeroLexer, LexCommaShouldPass) {
 TEST(AeroLexer, LexUnderscoreShouldPass) {
   std::vector<lexer::Token> tokens = LexInput("_");
   std::vector<lexer::Token> expected = {{SyntaxKind::Underscore, "_"}};
+
+  ASSERT_EQ(tokens, expected);
+}
+
+TEST(AeroLexer, LexEqualArrowShouldPass) {
+  std::vector<lexer::Token> tokens = LexInput("=>");
+  std::vector<lexer::Token> expected = {{SyntaxKind::EqualArrow, "=>"}};
 
   ASSERT_EQ(tokens, expected);
 }

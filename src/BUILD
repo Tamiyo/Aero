@@ -15,7 +15,7 @@ cc_library(
     deps = [
         "@fmt//:fmtlib",
         "@magic_enum",
-        "@spdlog//:spdlog",
+        "@spdlog",
     ],
     alwayslink = True,
 )

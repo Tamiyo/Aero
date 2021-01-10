@@ -17,6 +17,7 @@ class Source {
 
   std::optional<lexer::Token> NextToken();
   std::optional<SyntaxKind> PeekKind();
+  std::optional<SyntaxKind> PeekNKind(size_t);
 
  private:
   std::optional<SyntaxKind> PeekKindRaw();

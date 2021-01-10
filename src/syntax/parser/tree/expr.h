@@ -24,7 +24,7 @@ enum class Op {
   Div,
   Mod,
   Pow,
-  Bang
+  Bang,
 };
 
 std::optional<CompletedMarker> Expr(Parser &);

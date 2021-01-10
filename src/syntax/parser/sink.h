@@ -1,7 +1,6 @@
 #ifndef AERO_PARSER_SINK_H
 #define AERO_PARSER_SINK_H
 
-#include <deque>
 #include <vector>
 
 #include "syntax/ast/builder.h"
@@ -12,7 +11,7 @@
 namespace aero::syntax::parser {
 class Sink {
  public:
-  Sink(std::vector<lexer::Token>, std::deque<Event>);
+  Sink(std::vector<lexer::Token>, std::vector<Event>);
   Sink() = delete;
   Sink(const Sink &) = default;
   ~Sink() = default;
@@ -25,7 +24,7 @@ class Sink {
 
   std::vector<lexer::Token> tokens;
   size_t cursor;
-  std::deque<Event> events;
+  std::vector<Event> events;
   ast::GreenNodeBuilder builder;
 };
 }  // namespace aero::syntax::parser

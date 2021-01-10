@@ -10,4 +10,5 @@
 namespace aero::syntax::parser::tree::stmt {
 std::optional<CompletedMarker> Stmt(Parser &);
 }  // namespace aero::syntax::parser::tree::stmt
+
 #endif

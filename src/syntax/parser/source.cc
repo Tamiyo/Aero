@@ -23,6 +23,27 @@ std::optional<SyntaxKind> Source::PeekKind() {
   return PeekKindRaw();
 }
 
+std::optional<SyntaxKind> Source::PeekNKind(size_t n) {
+  size_t runner = cursor;
+  size_t i = 0;
+
+  while (runner < tokens.size() && i < n) {
+    while (IsTrivia(tokens[runner].Kind())) {
+      runner += 1;
+    }
+    runner += 1;
+    i += 1;
+  }
+  while (runner < tokens.size() && IsTrivia(tokens[runner].Kind())) {
+    runner += 1;
+  }
+  if (runner < tokens.size()) {
+    return std::optional<SyntaxKind>{tokens[runner].Kind()};
+  } else {
+    return std::nullopt;
+  }
+}
+
 std::optional<SyntaxKind> Source::PeekKindRaw() {
   if (cursor < tokens.size()) {
     return std::optional<SyntaxKind>{tokens[cursor].Kind()};
@@ -41,7 +62,7 @@ bool Source::AtTrivia() {
   std::optional<SyntaxKind> opt = PeekKindRaw();
 
   if (opt.has_value()) {
-    return is_trivia(*opt);
+    return IsTrivia(*opt);
   } else {
     return false;
   }
