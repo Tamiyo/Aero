@@ -11,13 +11,15 @@ namespace aero::syntax::parser {
 // Completed Marker
 CompletedMarker::CompletedMarker(size_t p) : pos(p) {}
 
+size_t CompletedMarker::Pos() const { return this->pos; }
+
 Marker CompletedMarker::Precede(Parser& p) {
   Marker new_m = p.Start();
 
   Event& event_at_pos = p.GetEventAt(pos);
 
-  if (std::holds_alternative<EventStartNode>(event_at_pos.type)) {
-    EventStartNode start = std::get<EventStartNode>(event_at_pos.type);
+  if (std::holds_alternative<event::StartNode>(event_at_pos.type)) {
+    event::StartNode start = std::get<event::StartNode>(event_at_pos.type);
     start.forward_parent = {new_m.Pos() - pos};
     event_at_pos.type = start;
   } else {
@@ -26,6 +28,10 @@ Marker CompletedMarker::Precede(Parser& p) {
   }
 
   return new_m;
+}
+
+std::ostream& operator<<(std::ostream& os, const CompletedMarker& cm) {
+  return os << fmt::format("CompletedMarker({})", cm.Pos());
 }
 
 // Marker
@@ -40,7 +46,7 @@ Marker::~Marker() {
   }
 }
 
-size_t Marker::Pos() { return this->pos; }
+size_t Marker::Pos() const { return this->pos; }
 
 void Marker::SetPos(size_t p) { this->pos = p; }
 
@@ -49,11 +55,15 @@ CompletedMarker Marker::Complete(Parser& p, SyntaxKind kind) {
 
   Event& event_at_pos = p.GetEventAt(pos);
 
-  assert(std::holds_alternative<EventPlaceholder>(event_at_pos.type));
-  event_at_pos.type = {EventStartNode{kind, {}}};
-  p.AddEvent(Event(EventFinishNode{}));
+  assert(std::holds_alternative<event::Placeholder>(event_at_pos.type));
+  event_at_pos.type = {event::StartNode{kind, {}}};
+  p.AddEvent(Event(event::FinishNode{}));
 
   return CompletedMarker(pos);
+}
+
+std::ostream& operator<<(std::ostream& os, const Marker& m) {
+  return os << fmt::format("Marker({})", m.Pos());
 }
 
 // Bomb

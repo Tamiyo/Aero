@@ -16,11 +16,17 @@ class Source {
   ~Source() = default;
 
   std::optional<lexer::Token> NextToken();
+
   std::optional<SyntaxKind> PeekKind();
   std::optional<SyntaxKind> PeekNKind(size_t);
 
+  std::optional<lexer::Token> PeekToken();
+  std::optional<std::pair<size_t,size_t>> LastTokenRange();
+
  private:
   std::optional<SyntaxKind> PeekKindRaw();
+  std::optional<lexer::Token> PeekTokenRaw();
+
 
   void EatTrivia();
   bool AtTrivia();

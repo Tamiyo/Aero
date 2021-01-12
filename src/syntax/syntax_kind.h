@@ -1,8 +1,10 @@
 #ifndef AERO_SYNTAX_SYNTAX_KIND_H
 #define AERO_SYNTAX_SYNTAX_KIND_H
 
-namespace aero::syntax {
+#include "fmt/ostream.h"
+#include "magic_enum.hpp"
 
+namespace aero::syntax {
 enum class SyntaxKind {
   // Punctuation
   LeftParen = 1,
@@ -107,6 +109,8 @@ enum class SyntaxKind {
   VariableDecl,
   FunctionDecl,
 };
+
+std::ostream& operator<<(std::ostream&, const SyntaxKind&);
 
 bool IsTrivia(SyntaxKind);
 bool IsType(SyntaxKind);

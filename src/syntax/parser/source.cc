@@ -14,7 +14,7 @@ std::optional<lexer::Token> Source::NextToken() {
     cursor += 1;
     return std::optional<lexer::Token>{Token};
   } else {
-    return std::nullopt;
+    return {};
   }
 }
 
@@ -38,17 +38,38 @@ std::optional<SyntaxKind> Source::PeekNKind(size_t n) {
     runner += 1;
   }
   if (runner < tokens.size()) {
-    return std::optional<SyntaxKind>{tokens[runner].Kind()};
+    return {tokens[runner].Kind()};
   } else {
-    return std::nullopt;
+    return {};
+  }
+}
+
+std::optional<lexer::Token> Source::PeekToken() {
+  EatTrivia();
+  return PeekTokenRaw();
+}
+
+std::optional<std::pair<size_t, size_t>> Source::LastTokenRange() {
+  if (tokens.size() > 0) {
+    return {tokens.back().Range()};
+  } else {
+    return {};
+  }
+}
+
+std::optional<lexer::Token> Source::PeekTokenRaw() {
+  if (cursor < tokens.size()) {
+    return {tokens.at(cursor)};
+  } else {
+    return {};
   }
 }
 
 std::optional<SyntaxKind> Source::PeekKindRaw() {
   if (cursor < tokens.size()) {
-    return std::optional<SyntaxKind>{tokens[cursor].Kind()};
+    return {tokens.at(cursor).Kind()};
   } else {
-    return std::nullopt;
+    return {};
   }
 }
 

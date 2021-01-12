@@ -1,7 +1,12 @@
 #include "syntax/parser/parser.h"
 
-#include <algorithm>
+#include <spdlog/spdlog.h>
 
+#include <algorithm>
+#include <utility>
+
+#include "magic_enum.hpp"
+#include "syntax/parser/error.h"
 #include "syntax/parser/marker.h"
 #include "syntax/parser/tree/stmt.h"
 
@@ -10,7 +15,7 @@ Parser::Parser(Source s) : source(s) {}
 
 Marker Parser::Start() {
   size_t pos = events.size();
-  events.push_back(Event(EventPlaceholder{}));
+  events.push_back(Event(event::Placeholder{}));
 
   return Marker(pos);
 }
@@ -32,6 +37,20 @@ void Parser::Expect(SyntaxKind kind) {
 }
 
 void Parser::Error() {
+
+  // Looking at alternative implementations for this
+  std::optional<lexer::Token> current_token = source.PeekToken();
+  std::optional<SyntaxKind> found = {};
+  std::pair<size_t, size_t> range;
+  if (auto current_token = source.PeekToken()) {
+    found = {(*current_token).Kind()};
+    range = (*current_token).Range();
+  } else {
+    range = *source.LastTokenRange();
+  }
+
+  events.emplace_back(event::Error{ParseError{expected_kinds, found, range}});
+
   if (!AtSet() && !AtEnd()) {
     Marker m = Start();
     Bump();
@@ -41,11 +60,6 @@ void Parser::Error() {
 
 bool Parser::At(SyntaxKind kind) {
   expected_kinds.push_back(context::FromSyntaxKind(kind));
-  return Peek().value_or(SyntaxKind::Placeholder) == kind;
-}
-
-bool Parser::AtExact(SyntaxKind kind) {
-  expected_kinds.push_back({context::Syntax{kind}});
   return Peek().value_or(SyntaxKind::Placeholder) == kind;
 }
 
@@ -62,22 +76,19 @@ bool Parser::AtLiteral() {
 bool Parser::AtEnd() { return !Peek().has_value(); }
 
 bool Parser::AtSet() {
-  // return std::find(std::begin(recovery), std::end(recovery),
-  //                  Peek().value_or(SyntaxKind::Placeholder));
-  return true;
+  return std::find(std::begin(RECOVERY_SET), std::end(RECOVERY_SET),
+                   Peek().value_or(SyntaxKind::Placeholder));
 }
 
 void Parser::Bump() {
   expected_kinds.clear();
   source.NextToken();
-  events.push_back(Event(EventAddToken{}));
+  events.push_back(Event(event::AddToken{}));
 }
 
 Event& Parser::GetEventAt(size_t pos) { return events.at(pos); }
 
-void Parser::SetEventAt(size_t pos, Event event) {
-  events.at(pos) = event;
-}
+void Parser::SetEventAt(size_t pos, Event event) { events.at(pos) = event; }
 
 void Parser::AddEvent(Event event) { events.push_back(event); }
 

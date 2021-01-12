@@ -7,6 +7,7 @@
 #include "syntax/ast/element.h"
 #include "syntax/lexer/token.h"
 #include "syntax/parser/event.h"
+#include "syntax/parser/parser.h"
 
 namespace aero::syntax::parser {
 class Sink {
@@ -16,7 +17,7 @@ class Sink {
   Sink(const Sink &) = default;
   ~Sink() = default;
 
-  ast::GreenNode Finish();  // This should actually be a GreenNode
+  Parse Finish();  // This should actually be a GreenNode
 
  private:
   void EatTrivia();
@@ -25,6 +26,7 @@ class Sink {
   std::vector<lexer::Token> tokens;
   size_t cursor;
   std::vector<Event> events;
+  std::vector<ParseError> errors;
   ast::GreenNodeBuilder builder;
 };
 }  // namespace aero::syntax::parser

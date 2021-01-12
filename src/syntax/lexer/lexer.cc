@@ -7,7 +7,9 @@ Token Lexer::MakeToken(std::string::iterator *it, SyntaxKind kind,
                        std::string text) {
   size_t text_length = text.size();
   std::advance(*it, text_length);
-  return Token(kind, text);
+
+  size_t start = std::distance(input.begin(), *it);
+  return Token(kind, text, {start, start + text_length});
 }
 
 char Lexer::Bump(std::string::iterator *itx) {

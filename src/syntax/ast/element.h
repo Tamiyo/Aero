@@ -6,6 +6,7 @@
 #include <memory>
 #include <variant>
 
+#include "fmt/ostream.h"
 #include "syntax/syntax_kind.h"
 
 namespace aero::syntax::ast {
@@ -21,6 +22,10 @@ struct GreenNode {
 };
 
 using GreenElement = std::variant<GreenNode, GreenToken>;
+
+std::ostream &operator<<(std::ostream &, const GreenToken &);
+std::ostream &operator<<(std::ostream &, const GreenNode &);
+std::ostream &operator<<(std::ostream &, const GreenElement &);
 }  // namespace aero::syntax::ast
 
 #endif

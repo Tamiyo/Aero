@@ -5,6 +5,7 @@
 #include <optional>
 #include <vector>
 
+#include "syntax/ast/element.h"
 #include "syntax/lexer/token.h"
 #include "syntax/parser/context/token_kind.h"
 #include "syntax/parser/event.h"
@@ -12,7 +13,17 @@
 #include "syntax/syntax_kind.h"
 
 namespace aero::syntax::parser {
+namespace {
+const SyntaxKind RECOVERY_SET[2] = {SyntaxKind::RightCurly,
+                                    SyntaxKind::Semicolon};
+}
+
 class Marker;
+
+struct Parse {
+  ast::GreenNode root;
+  std::vector<ParseError> errors;
+};
 
 class Parser {
  public:
@@ -29,7 +40,6 @@ class Parser {
   void Error();
 
   bool At(SyntaxKind);
-  bool AtExact(SyntaxKind);
   bool AtLiteral();
   bool AtEnd();
   bool AtSet();

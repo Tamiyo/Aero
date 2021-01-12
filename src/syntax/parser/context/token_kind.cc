@@ -2,6 +2,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include "magic_enum.hpp"
+
 namespace aero::syntax::parser::context {
 TokenKind FromSyntaxKind(SyntaxKind kind) {
   if (kind < SyntaxKind::__LITERALS) {
@@ -17,6 +19,7 @@ TokenKind FromSyntaxKind(SyntaxKind kind) {
   } else if (kind < SyntaxKind::__NODES) {
     return context::Type{};
   } else {
+    // Should never happen
     spdlog::error("TokenKind cannot be from SyntaxKind::__NODES!");
     exit(1);
   }

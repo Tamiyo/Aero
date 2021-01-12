@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "syntax/ast/element.h"
-#include "syntax/ast/format.h"
 #include "syntax/lexer/lexer.h"
 #include "syntax/parser/parser.h"
 #include "syntax/parser/sink.h"
@@ -34,7 +33,7 @@ void Cli() {
 
     fmt::print("\n::Lexer Results::\n");
     for (auto token : tokens) {
-      fmt::print("{}\n", token.Pretty());
+      fmt::print("{}\n", token);
     }
 
     // Parse user input
@@ -44,10 +43,10 @@ void Cli() {
     parser.Parse();
 
     aero::syntax::parser::Sink sink(tokens, parser.Events());
-    aero::syntax::ast::GreenNode node = sink.Finish();
+    aero::syntax::parser::Parse parse = sink.Finish();
 
     fmt::print("\n::AST Results::\n");
-    fmt::print("{}", aero::syntax::ast::PrettyGreenNode(node, 0));
+    fmt::print("{}\n", parse.root);
   }
 }
 }  // namespace aero::cli

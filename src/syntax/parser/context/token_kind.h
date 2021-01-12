@@ -1,6 +1,7 @@
 #ifndef AERO_PARSER_CONTEXT_TOKEN_KIND_H
 #define AERO_PARSER_CONTEXT_TOKEN_KIND_H
 
+#include <string>
 #include <variant>
 
 #include "syntax/syntax_kind.h"

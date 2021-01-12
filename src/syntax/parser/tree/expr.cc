@@ -4,7 +4,6 @@
 
 #include <cassert>
 #include <cstdint>
-#include <magic_enum.hpp>
 
 #include "syntax/syntax_kind.h"
 
@@ -89,30 +88,33 @@ std::pair<uint8_t, uint8_t> Precedence(Op &op) {
   }
 }
 
-std::optional<CompletedMarker> ExprInner(Parser &p,
-                                         uint8_t minimum_precedence) {
+std::optional<CompletedMarker> ExprInner(Parser &p, uint8_t min_precedence) {
   if (auto lhs = Lhs(p)) {
     for (;;) {
       if (auto op = OpFromSyntaxKind(p)) {
         std::pair<uint8_t, uint8_t> precedence = Precedence(*op);
 
-        if (precedence.first < minimum_precedence) {
-          return std::nullopt;
+        if (precedence.first < min_precedence) {
+          return {};
         }
 
         p.Bump();
 
         Marker m = lhs->Precede(p);
-        ExprInner(p, precedence.second);
-
+        std::optional<CompletedMarker> parsed_rhs = ExprInner(p, precedence.second);
         lhs.emplace(m.Complete(p, SyntaxKind::BinaryExpr));
+
+        if(!parsed_rhs.has_value()) {
+          break;
+        }
+
       } else {
         break;
       }
     }
     return {lhs};
   }
-  return std::nullopt;
+  return {};
 }
 
 CompletedMarker Literal(Parser &p) {

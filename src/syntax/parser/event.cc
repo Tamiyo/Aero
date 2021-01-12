@@ -7,24 +7,23 @@
 namespace aero::syntax::parser {
 Event::Event(EventType t) : type(t) {}
 
-std::string Event::Pretty() {
-  if (std::holds_alternative<EventStartNode>(type)) {
-    EventStartNode node = std::get<EventStartNode>(type);
+std::ostream& operator<<(std::ostream& os, const Event& event) {
+  if (std::holds_alternative<event::StartNode>(event.type)) {
+    event::StartNode node = std::get<event::StartNode>(event.type);
+
     std::string fp = (node.forward_parent.has_value())
                          ? std::to_string(*node.forward_parent)
                          : "N/A";
-
-    return fmt::format("StartNode {{{} : {}}}",
-                       magic_enum::enum_name(node.kind), fp);
-  } else if (std::holds_alternative<EventAddToken>(type)) {
-    return "AddToken {}";
-  } else if (std::holds_alternative<EventFinishNode>(type)) {
-    return "FinishNode {}";
-  } else if (std::holds_alternative<EventPlaceholder>(type)) {
-    return "Placeholder {}";
+    return os << fmt::format("StartNode({}, {})", node.kind, fp);
+  } else if (std::holds_alternative<event::AddToken>(event.type)) {
+    return os << "AddToken()";
+  } else if (std::holds_alternative<event::FinishNode>(event.type)) {
+    return os << "FinishNode()";
+  } else if (std::holds_alternative<event::Placeholder>(event.type)) {
+    return os << "Placeholder()";
   } else {
-    EventError node = std::get<EventError>(type);
-    return "Error {}";
+    event::Error node = std::get<event::Error>(event.type);
+    return os << "Error()";
   }
 }
 }  // namespace aero::syntax::parser

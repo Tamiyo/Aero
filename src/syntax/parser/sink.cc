@@ -9,16 +9,17 @@ namespace aero::syntax::parser {
 Sink::Sink(std::vector<aero::syntax::lexer::Token> t, std::vector<Event> e)
     : tokens(t), events(e) {
   this->builder = ast::GreenNodeBuilder();
+  this->errors = std::vector<ParseError>();
   this->cursor = 0;
 }
 
-ast::GreenNode Sink::Finish() {
+Parse Sink::Finish() {
   for (size_t idx = 0; idx < events.size(); idx += 1) {
     Event event = events.at(idx);
-    events.at(idx) = {EventPlaceholder{}};
+    events.at(idx) = {event::Placeholder{}};
 
-    if (std::holds_alternative<EventStartNode>(event.type)) {
-      EventStartNode start = std::get<EventStartNode>(event.type);
+    if (std::holds_alternative<event::StartNode>(event.type)) {
+      event::StartNode start = std::get<event::StartNode>(event.type);
       std::vector<SyntaxKind> kinds({start.kind});
 
       size_t idx_parent = idx;
@@ -29,11 +30,11 @@ ast::GreenNode Sink::Finish() {
           idx_parent += *fp;
 
           Event event_parent = events.at(idx_parent);
-          events.at(idx_parent) = Event{EventPlaceholder{}};
+          events.at(idx_parent) = Event{event::Placeholder{}};
 
-          if (std::holds_alternative<EventStartNode>(event_parent.type)) {
-            EventStartNode start_inner =
-                std::get<EventStartNode>(event_parent.type);
+          if (std::holds_alternative<event::StartNode>(event_parent.type)) {
+            event::StartNode start_inner =
+                std::get<event::StartNode>(event_parent.type);
             kinds.push_back(start_inner.kind);
             forward_parent = start_inner.forward_parent;
           }
@@ -46,16 +47,18 @@ ast::GreenNode Sink::Finish() {
       for (auto kind : kinds) {
         builder.StartNode(kind);
       }
-    } else if (std::holds_alternative<EventAddToken>(event.type)) {
+    } else if (std::holds_alternative<event::AddToken>(event.type)) {
       Token();
-    } else if (std::holds_alternative<EventFinishNode>(event.type)) {
+    } else if (std::holds_alternative<event::FinishNode>(event.type)) {
       builder.FinishNode();
+    } else if (std::holds_alternative<event::Error>(event.type)) {
+      errors.emplace_back(std::get<event::Error>(event.type).error);
     }
 
     EatTrivia();
   }
 
-  return builder.Finish();
+  return Parse{builder.Finish(), errors};
 }
 
 void Sink::EatTrivia() {

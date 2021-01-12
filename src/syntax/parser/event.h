@@ -1,6 +1,8 @@
 #ifndef AERO_PARSER_EVENT_H
 #define AERO_PARSER_EVENT_H
 
+#include <fmt/ostream.h>
+
 #include <optional>
 #include <variant>
 
@@ -8,17 +10,22 @@
 #include "syntax/syntax_kind.h"
 
 namespace aero::syntax::parser {
-struct EventStartNode {
+namespace event {
+struct StartNode {
   SyntaxKind kind;
   std::optional<size_t> forward_parent;
 };
-struct EventAddToken {};
-struct EventFinishNode {};
-struct EventPlaceholder {};
-struct EventError {};
+struct AddToken {};
+struct FinishNode {};
+struct Placeholder {};
+struct Error {
+  ParseError error;
+};
+}  // namespace event
 
-using EventType = std::variant<EventStartNode, EventAddToken, EventFinishNode,
-                               EventPlaceholder, EventError>;
+using EventType =
+    std::variant<event::StartNode, event::AddToken, event::FinishNode,
+                 event::Placeholder, event::Error>;
 
 class Event {
  public:
@@ -27,11 +34,10 @@ class Event {
   Event(const Event&) = default;
   ~Event() = default;
 
-  std::string Pretty();
-
   EventType type;
 };
 
+std::ostream& operator<<(std::ostream&, const Event&);
 }  // namespace aero::syntax::parser
 
 #endif
