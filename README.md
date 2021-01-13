@@ -6,7 +6,8 @@ Any content is subject to change at any time. <br>
 Docs will be added once signifigant progress has been made.
 
 ## Built with Bazel
-Built with [Bazel](https://github.com/bazelbuild/bazel). Find out [more](https://www.bazel.build/).
+Built with [Bazel](https://github.com/bazelbuild/bazel). Find out [more](https://www.bazel.build/). <br>
+All dependencies should be managed by Bazel.
 
 ## Pipeline
 ### Build All
