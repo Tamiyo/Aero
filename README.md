@@ -1,6 +1,8 @@
 # Aero
 
-WIP Programming Language in C++
+WIP Programming Language in C++ <br>
+Subject to change at any time <br>
+Docs will be added once signifigant progress has been made
 
 ## Built with Bazel
 Build with [Bazel](https://github.com/bazelbuild/bazel). Find out [more](https://www.bazel.build/).
