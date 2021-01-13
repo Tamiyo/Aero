@@ -116,13 +116,4 @@ bool IsTrivia(SyntaxKind);
 bool IsType(SyntaxKind);
 }  // namespace aero::syntax
 
-namespace std {
-template <>
-struct hash<aero::syntax::SyntaxKind> {
-  size_t operator()(const aero::syntax::SyntaxKind& t) const {
-    return size_t(t);
-  }
-};
-}  // namespace std
-
 #endif
