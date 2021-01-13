@@ -13,6 +13,7 @@ cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "@boost//:functional",
         "@fmt//:fmtlib",
         "@magic_enum",
         "@spdlog",

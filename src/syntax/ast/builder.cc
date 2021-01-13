@@ -8,9 +8,13 @@
 
 namespace aero::syntax::ast {
 void GreenNodeBuilder::Token(SyntaxKind kind, std::string text) {
-  // Cache optimizations here
-  GreenElement e = GreenElement(GreenToken{kind, text});
-  children.push_back(e);
+  GreenToken token = GreenToken{kind, text};
+  if (auto t = tokens.find(token); t != tokens.end()) {
+    token = GreenToken{*t};
+  } else {
+    tokens.insert(GreenToken{token});
+  }
+  children.push_back({token});
 }
 
 void GreenNodeBuilder::StartNode(SyntaxKind kind) {
@@ -32,8 +36,15 @@ void GreenNodeBuilder::FinishNode() {
 
   children.erase(middle, children.end());
 
-  GreenNode new_child{parent.kind, parent.text_len, node_children};
-  children.push_back(new_child);
+  GreenNode node{parent.kind, parent.text_len, node_children};
+  if (node.children.size() <= 3) {
+    if (auto n = nodes.find(node); n != nodes.end()) {
+      node = GreenNode{*n};
+    } else {
+      nodes.insert(GreenNode{node});
+    }
+  }
+  children.push_back({node});
 }
 
 GreenNode GreenNodeBuilder::Finish() {
