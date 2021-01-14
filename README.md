@@ -12,22 +12,22 @@ All dependencies should be managed by Bazel.
 ## Pipeline
 ### Build All
 ```
-bazel build //...
+bazel build @Aero//...
 ```
 
 ### Build Source
 ```
-bazel build //src:Aero
+bazel build @Aero//src:AeroSrc
 ```
 
 ### Build & Run Source
 ```
-bazel run //src:Aero
+bazel run @Aero//src:AeroSrc
 ```
 
 ### Build & Run Tests
 ```
-bazel test //...
+bazel test @Aero//...
 ```
 
 ## Stylistic Choices

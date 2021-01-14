@@ -1,3 +1,6 @@
+workspace(name = "Aero")
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Debug
@@ -16,53 +19,23 @@ http_archive(
 )
 
 # Formatting
-FMT_BUILD = """
-load("@rules_cc//cc:defs.bzl", "cc_library")
-
-cc_library(
-    name = "fmtlib",
-    hdrs = glob([
-        "include/fmt/*.h",
-    ]),
-    defines = ["FMT_HEADER_ONLY"],
-    includes = ["include"],
-    visibility = ["//visibility:public"],
-)
-"""
-
 http_archive(
     name = "fmt",
-    build_file_content = FMT_BUILD,
+    build_file = "@Aero//external:BUILD.fmt",
     sha256 = "decfdf9ad274070fa85f26407b816f5a4d82205ae86bac1990be658d0795ea4d",
     strip_prefix = "fmt-7.0.3",
     urls = ["https://github.com/fmtlib/fmt/releases/download/7.0.3/fmt-7.0.3.zip"],
 )
 
-SPDLOG_BUILD = """
-load("@rules_cc//cc:defs.bzl", "cc_library")
-
-cc_library(
-    name = "spdlog",
-    hdrs = glob([
-        "include/**/*.h",
-    ]),
-    defines = ["SPDLOG_FMT_EXTERNAL"],
-    includes = ["include"],
-    visibility = ["//visibility:public"],
-    deps = ["@fmt//:fmtlib"],
-)
-"""
-
 http_archive(
     name = "spdlog",
-    build_file_content = SPDLOG_BUILD,
+    build_file = "@Aero//external:BUILD.spdlog",
     sha256 = "f0114a4d3c88be9e696762f37a7c379619443ce9d668546c61b21d41affe5b62",
     strip_prefix = "spdlog-1.7.0",
     urls = ["https://github.com/gabime/spdlog/archive/v1.7.0.tar.gz"],
 )
 
 # Boost, cause Boost
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "com_github_nelhage_rules_boost",
     commit = "1e3a69bf2d5cd10c34b74f066054cd335d033d71",
@@ -71,4 +44,5 @@ git_repository(
 )
 
 load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
+
 boost_deps()

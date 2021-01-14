@@ -22,7 +22,7 @@ cc_library(
 )
 
 cc_binary(
-    name = "Aero",
+    name = "AeroSrc",
     srcs = ["main.cc"],
     deps = [
         ":AeroLib",
