@@ -3,7 +3,7 @@
 WIP Programming Language in C++ <br>
 This is primarly a project I work on in my free time to get experience with Modern C++ and Compilers. <br>
 Any content is subject to change at any time. <br>
-Docs will be added once signifigant progress has been made.
+Docs will be added once significant progress has been made.
 
 ## Built with Bazel
 Built with [Bazel](https://github.com/bazelbuild/bazel). Find out [more](https://www.bazel.build/). <br>
